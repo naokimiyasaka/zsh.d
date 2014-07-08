@@ -6,4 +6,6 @@ export GOPATH=$HOME/work/go
 #--------------------------------------------------
 #  path設定
 #-------------------------------------------------
-export PATH="$HOME/work/go/bin:$PATH"
+#export PATH="$HOME/work/go/bin:$PATH"
+
+path=(~/bin/(N-/) /usr/local/bin(N-/) $GOPATH/bin $path)

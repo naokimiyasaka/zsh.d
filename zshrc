@@ -121,6 +121,14 @@ zstyle ':completion:*:default' menu select=1
 # 色指定にLS_COLORSを使用
 zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
 
+#----------------------------------------------------------
+# auto-fu (補完機能強化)
+#----------------------------------------------------------
+source $HOME/.zsh.d/auto-fu.zsh/auto-fu.zsh
+zle-line-init () {auto-fu-init;}; zle -N zle-line-init
+zstyle ':completion:*' completer _oldlist _complete
+
+
 #-----------------------------------------------------------
 # 補完機能の初期化
 #----------------------------------------------------------
@@ -350,9 +358,6 @@ function prompt_get_tmux_display {
 left_prompt
 add-zsh-hook precmd right_prompt
 
-
-
-
 #------------------------------------------------------------
 # エイリアス
 #------------------------------------------------------------
@@ -364,3 +369,161 @@ elif [ `uname` = "Darwin" ]; then
     alias la="ls -alG"
     alias grep="grep --color"
 fi
+
+#-----------------------------------------------------------
+# ユーティリティ
+#-----------------------------------------------------------
+# iTerm2のタブ名を変更する
+function title {
+    echo -ne "\033]0;"$* "\007"
+    #$* は引数表示すべてを表示する　$0,$1と同じ
+    # 例：sh test.sh hoge moge hage で$0:test.sh $1:hoge $2:moge $3:hage 各引数を取得
+}
+
+function tmux_power_line_theme {
+    if ! [ -n "$TMUX" ]; then
+         echo "not run tmux."
+         return
+    fi
+
+    case "$1" in
+         "-l" | "--list" )
+             for theme in `ls -l $HOME/.tmux.d/tmux-powerline/themes`
+             do
+                 if [ "`basename $theme .sh`" = "`tmux show-environment -g TMUX_POWERLINE_THEME | sed -e 's/TMUX_POWERLINE_THEME=//'`" ]; then
+                     echo "*`basename $theme .sh`"
+                 else
+                     echo " `basename $theme .sh`"
+                 fi
+             done
+             ;;
+          *)
+             if [ -e "$HOME/.tmux.d/tmux-powerline/themes/$1.sh" -o -L "$HOME/.tmux.d/tmux-powerline/themes/$1.sh" ]; then
+                  tmux set-environment -g TMUX_POWERLINE_THEME $1
+             fi
+             ;;
+      esac
+}
+
+function color256 {
+    for code in {000..255};
+    do
+        print -nP -- "%F{$code}$code %f"; [ $((${code} %16)) -eq 15 ] && echo;
+    done
+}
+
+function color16 {
+    echo " OnWhite(47)     On Black(40)    On Default     Color Code"
+
+    echo -e "\
+\033[47m\033[1;37m  White        \033[0m  \
+\033[40m\033[1;37m  White        \033[0m  \
+\033[1;37m  White        \033[0m\
+  1;37\
+"
+
+echo -e "\
+\033[47m\033[37m  Light Gray   \033[0m  \
+\033[40m\033[37m  Light Gray   \033[0m  \
+\033[37m  Light Gray   \033[0m  \
+37\
+"
+
+    echo -e "\
+\033[47m\033[1;30m  Gray         \033[0m  \
+\033[40m\033[1;30m  Gray         \033[0m  \
+\033[1;30m  Gray         \033[0m  \
+1;30\
+"
+
+    echo -e "\
+\033[47m\033[30m  Black        \033[0m  \
+\033[40m\033[30m  Black        \033[0m  \
+\033[30m  Black        \033[0m  \
+30\
+"
+
+    echo -e "\
+\033[47m\033[31m  Red          \033[0m  \
+\033[40m\033[31m  Red          \033[0m  \
+\033[31m  Red          \033[0m  \
+31\
+"
+
+    echo -e "\
+\033[47m\033[1;31m  Light Red    \033[0m  \
+\033[40m\033[1;31m  Light Red    \033[0m  \
+\033[1;31m  Light Red    \033[0m  \
+1;31\
+"
+
+    echo -e "\
+\033[47m\033[32m  Green        \033[0m  \
+\033[40m\033[32m  Green        \033[0m  \
+\033[32m  Green        \033[0m  \
+32\
+"
+
+    echo -e "\
+\033[47m\033[1;32m  Light Green  \033[0m  \
+\033[40m\033[1;32m  Light Green  \033[0m  \
+\033[1;32m  Light Green  \033[0m  \
+1;32\
+"
+
+    echo -e "\
+\033[47m\033[33m  Brown        \033[0m  \
+\033[40m\033[33m  Brown        \033[0m  \
+\033[33m  Brown        \033[0m  \
+33\
+"
+
+    echo -e "\
+\033[47m\033[1;33m  Yellow       \033[0m  \
+\033[40m\033[1;33m  Yellow       \033[0m  \
+\033[1;33m  Yellow       \033[0m  \
+1;33\
+"
+
+    echo -e "\
+\033[47m\033[34m  Blue         \033[0m  \
+\033[40m\033[34m  Blue         \033[0m  \
+\033[34m  Blue         \033[0m  \
+34\
+"
+
+   echo -e "\
+\033[47m\033[1;34m  Light Blue   \033[0m  \
+\033[40m\033[1;34m  Light Blue   \033[0m  \
+\033[1;34m  Light Blue   \033[0m  \
+1;34\
+"
+
+    echo -e "\
+\033[47m\033[35m  Purple       \033[0m  \
+\033[40m\033[35m  Purple       \033[0m  \
+\033[35m  Purple       \033[0m  \
+35\
+"
+
+    echo -e "\
+\033[47m\033[1;35m  Pink         \033[0m  \
+\033[40m\033[1;35m  Pink         \033[0m  \
+\033[1;35m  Pink         \033[0m  \
+1;35\
+"
+
+    echo -e "\
+\033[47m\033[36m  Cyan         \033[0m  \
+\033[40m\033[36m  Cyan         \033[0m  \
+\033[36m  Cyan         \033[0m  \
+36\
+"
+
+    echo -e "\
+\033[47m\033[1;36m  Light Cyan   \033[0m  \
+\033[40m\033[1;36m  Light Cyan   \033[0m  \
+\033[1;36m  Light Cyan   \033[0m  \
+1;36\
+"
+}

@@ -368,8 +368,10 @@ elif [ `uname` = "Darwin" ]; then
     alias ll="ls -lG"
     alias la="ls -alG"
     alias grep="grep --color"
-    alias vi="subl"
-    #alias vim="subl"
+    if [ -e "/usr/local/bin/subl" ]; then
+      alias vi="subl"
+      alias vim="subl"
+    fi
 fi
 
 #-----------------------------------------------------------

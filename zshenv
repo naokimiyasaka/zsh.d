@@ -8,4 +8,5 @@ export GOPATH=$HOME/work/go
 #-------------------------------------------------
 #export PATH="$HOME/work/go/bin:$PATH"
 
-path=(~/bin/(N-/) /usr/local/bin(N-/) $GOPATH/bin $path)
+path=(~/.phpenv/bin(N-/) ~/bin/(N-/) /usr/local/bin(N-/) $GOPATH/bin $path)
+eval "$(phpenv init -)"
